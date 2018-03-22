@@ -2,20 +2,23 @@ package com.isa.java.mvc.core.router.rules;
 
 import com.isa.java.mvc.core.router.matcher.PathMatcher;
 import com.isa.java.mvc.core.router.matcher.PathPatternMatcher;
-
+import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 
-public class PathPatternMatchRule implements RouteRule {
-    private final String pathPattern;
+public class PathPatternRule implements RouteRule {
+
+    private final String[] pathPatterns;
+
     private final PathMatcher pathMatcher = new PathPatternMatcher();
 
-    public PathPatternMatchRule(String pathPattern) {
-        this.pathPattern = pathPattern;
+    public PathPatternRule(String[] pathPatterns) {
+        this.pathPatterns = pathPatterns;
     }
 
     @Override
     public boolean test(HttpServletRequest httpServletRequest) {
         RequestProperties requestProperties = RequestProperties.get(httpServletRequest);
-        return pathMatcher.matches(pathPattern, requestProperties.getPath());
+        return Arrays.stream(pathPatterns)
+                .anyMatch(pathPattern -> pathMatcher.matches(pathPattern, requestProperties.getPath()));
     }
 }

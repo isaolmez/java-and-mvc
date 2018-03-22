@@ -29,12 +29,14 @@ public class ReflectiveRouteMappingExtractor implements RouteMappingExtractor {
         final Set<RouteMappingInfo> mappings = new HashSet<>();
         Set<Method> routeMappingMethods = ReflectionUtils.getAllMethods(routeClass, withAnnotation(RouteMapping.class));
         for (Method routeMappingMethod : routeMappingMethods) {
-            RouteMapping declaredAnnotation = routeMappingMethod.getDeclaredAnnotation(RouteMapping.class);
+            RouteMapping routeMappingAnnotation = routeMappingMethod.getDeclaredAnnotation(RouteMapping.class);
             RouteMappingInfo routeMappingInfo = RouteMappingInfo.builder()
                     .handlerMethod(routeMappingMethod)
                     .handler(routeClass)
-                    .httpMethod(declaredAnnotation.method())
-                    .path(declaredAnnotation.path())
+                    .httpMethod(routeMappingAnnotation.method())
+                    .paths(routeMappingAnnotation.paths())
+                    .pathPatterns(routeMappingAnnotation.pathPatterns())
+                    .headers(routeMappingAnnotation.headers())
                     .build();
             mappings.add(routeMappingInfo);
         }

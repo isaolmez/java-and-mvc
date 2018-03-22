@@ -1,9 +1,8 @@
 package com.isa.java.mvc.core.handler;
 
-import javax.servlet.ServletException;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @FunctionalInterface
 public interface HttpHandler {

@@ -1,6 +1,6 @@
 package com.isa.java.mvc.core.annotation;
 
-import com.isa.java.mvc.core.common.HttpMethod;
+import com.isa.java.mvc.core.model.HttpMethod;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -12,7 +12,11 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface RouteMapping {
 
-    String path();
+    HttpMethod method() default HttpMethod.GET;
 
-    HttpMethod method();
+    String[] paths() default {};
+
+    String[] pathPatterns() default {};
+
+    String[] headers() default {};
 }
