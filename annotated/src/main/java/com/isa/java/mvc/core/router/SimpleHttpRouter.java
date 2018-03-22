@@ -1,11 +1,10 @@
 package com.isa.java.mvc.core.router;
 
 
-import com.isa.java.mvc.core.extractor.RouteMappingInfo;
 import com.isa.java.mvc.core.handler.HttpHandler;
+import com.isa.java.mvc.core.router.registry.MappingRegistration;
+import com.isa.java.mvc.core.router.registry.RouteMappingRegistry;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,45 +12,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleHttpRouter implements HttpRouter {
 
-    private final List<RouteMappingInfo> routeMappingInfos;
+    private final RouteMappingRegistry routeMappingRegistry;
     private final HttpHandler defaultHandler;
 
-    SimpleHttpRouter(List<RouteMappingInfo> routeMappingInfos, HttpHandler defaultHandler) {
-        this.routeMappingInfos = routeMappingInfos != null ? routeMappingInfos : new ArrayList<>();
+    public SimpleHttpRouter(RouteMappingRegistry routeMappingRegistry, HttpHandler defaultHandler) {
+        this.routeMappingRegistry = routeMappingRegistry;
         this.defaultHandler = defaultHandler;
     }
 
     @Override
     public void route(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info("Routing the request...");
-        RouteMappingInfo routeMappingInfo = findMatchingMappingInfo(request);
-//        httpHandler.handle(request, response);
-    }
-
-    private RouteMappingInfo findMatchingMappingInfo(HttpServletRequest httpServletRequest) {
-        for (RouteMappingInfo routeMappingInfo : routeMappingInfos) {
-            boolean matches = true;
-            if (!routeMappingInfo.getHttpMethodRule().test(httpServletRequest)) {
-                matches = false;
-            }
-
-            if (!routeMappingInfo.getHttpMethodRule().test(httpServletRequest)) {
-                matches = false;
-            }
-
-            if (!routeMappingInfo.getPathPatternRule().test(httpServletRequest)) {
-                matches = false;
-            }
-
-            if (routeMappingInfo.getPathRule().test(httpServletRequest)) {
-                matches = false;
-            }
-
-            if (matches) {
-                return routeMappingInfo;
-            }
+        MappingRegistration mappingRegistration = findMatchingMappingInfo(request);
+        if (mappingRegistration == null) {
+            defaultHandler.handle(request, response);
         }
 
-        return null;
+        ((HttpHandler) (request1, response1) -> {
+            Object result = mappingRegistration.getHandlerMethod().invoke();
+            response1.getWriter().print(result);
+        }).handle(request, response);
+
+    }
+
+    private MappingRegistration findMatchingMappingInfo(HttpServletRequest httpServletRequest) {
+        return routeMappingRegistry.getMappingRegistration(httpServletRequest);
     }
 }

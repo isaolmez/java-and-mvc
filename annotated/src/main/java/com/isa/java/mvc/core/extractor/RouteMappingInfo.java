@@ -19,29 +19,32 @@ public class RouteMappingInfo {
     private final PathPatternRule pathPatternRule;
     private final HttpHeaderRule httpHeaderRule;
 
-    public static class Builder {
+    public static RuleBuilder ruleBuilder(){
+        return new RuleBuilder();
+    }
 
+    public static class RuleBuilder {
         private HttpMethod method;
         private String[] paths;
         private String[] pathPatterns;
         private String[] headers;
 
-        public Builder method(HttpMethod httpMethod) {
+        public RuleBuilder method(HttpMethod httpMethod) {
             this.method = httpMethod;
             return this;
         }
 
-        public Builder paths(String[] paths) {
+        public RuleBuilder paths(String[] paths) {
             this.paths = paths;
             return this;
         }
 
-        public Builder pathPatterns(String[] pathPatterns) {
+        public RuleBuilder pathPatterns(String[] pathPatterns) {
             this.pathPatterns = pathPatterns;
             return this;
         }
 
-        public Builder headers(String[] headers) {
+        public RuleBuilder headers(String[] headers) {
             this.headers = headers;
             return this;
         }

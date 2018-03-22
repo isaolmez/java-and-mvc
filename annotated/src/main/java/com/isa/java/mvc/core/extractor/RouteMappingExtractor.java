@@ -1,8 +1,8 @@
 package com.isa.java.mvc.core.extractor;
 
-import java.util.Set;
+import com.isa.java.mvc.core.router.registry.RouteMappingRegistry;
 
 public interface RouteMappingExtractor {
 
-    Set<RouteMappingInfo> getAllMappings();
+    RouteMappingRegistry initializeMappingRegistry();
 }
