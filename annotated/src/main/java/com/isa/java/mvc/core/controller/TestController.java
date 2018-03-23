@@ -7,23 +7,28 @@ import com.isa.java.mvc.core.model.HttpMethod;
 @RestRoute
 public class TestController {
 
-    @RouteMapping(paths = "/hello", method = HttpMethod.GET, headers = "X-Get")
+    @RouteMapping(paths = "/hello", method = HttpMethod.GET)
     public String helloGet() {
-        return "Hello GET";
+        return "helloGet";
+    }
+
+    @RouteMapping(paths = "/hello", method = HttpMethod.GET, headers = "X-Get")
+    public String helloGetWithHeader() {
+        return "helloGetWithHeader";
     }
 
     @RouteMapping(paths = "/hello", method = HttpMethod.POST, headers = "X-Post")
     public String helloPost() {
-        return "Hello POST";
+        return "helloPost";
     }
 
     @RouteMapping(pathPatterns = "/hello/*", method = HttpMethod.POST)
     public String helloPostPattern() {
-        return "Hello POST";
+        return "helloPostPattern";
     }
 
     @RouteMapping(paths = "/hello", method = HttpMethod.PUT)
     public String helloPut() {
-        return "Hello PUT";
+        return "helloPut";
     }
 }

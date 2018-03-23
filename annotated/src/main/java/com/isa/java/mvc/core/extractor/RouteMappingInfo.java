@@ -8,6 +8,7 @@ import com.isa.java.mvc.core.router.rules.PathRule;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 
 @Getter
 @RequiredArgsConstructor
@@ -19,42 +20,63 @@ public class RouteMappingInfo {
     private final PathPatternRule pathPatternRule;
     private final HttpHeaderRule httpHeaderRule;
 
-    public static RuleBuilder ruleBuilder(){
+    public static RuleBuilder ruleBuilder() {
         return new RuleBuilder();
     }
 
     public static class RuleBuilder {
-        private HttpMethod method;
-        private String[] paths;
-        private String[] pathPatterns;
-        private String[] headers;
+
+        private HttpMethodRule methodRule;
+        private PathRule pathRule;
+        private PathPatternRule pathPatternRule;
+        private HttpHeaderRule headerRule;
 
         public RuleBuilder method(HttpMethod httpMethod) {
-            this.method = httpMethod;
+            if (httpMethod != null) {
+                methodRule = new HttpMethodRule(httpMethod);
+            } else {
+                methodRule = null;
+            }
+
             return this;
         }
 
         public RuleBuilder paths(String[] paths) {
-            this.paths = paths;
+            if (ArrayUtils.isNotEmpty(paths)) {
+                pathRule = new PathRule(paths);
+            } else {
+                pathRule = null;
+            }
+
             return this;
         }
 
         public RuleBuilder pathPatterns(String[] pathPatterns) {
-            this.pathPatterns = pathPatterns;
+            if (ArrayUtils.isNotEmpty(pathPatterns)) {
+                pathPatternRule = new PathPatternRule(pathPatterns);
+            } else {
+                pathPatternRule = null;
+            }
+
             return this;
         }
 
         public RuleBuilder headers(String[] headers) {
-            this.headers = headers;
+            if (ArrayUtils.isNotEmpty(headers)) {
+                headerRule = new HttpHeaderRule(headers);
+            } else {
+                headerRule = null;
+            }
+
             return this;
         }
 
         public RouteMappingInfo build() {
             return RouteMappingInfo.builder()
-                    .httpMethodRule(new HttpMethodRule(method))
-                    .pathRule(new PathRule(paths))
-                    .pathPatternRule(new PathPatternRule(pathPatterns))
-                    .httpHeaderRule(new HttpHeaderRule(headers))
+                    .httpMethodRule(methodRule)
+                    .pathRule(pathRule)
+                    .pathPatternRule(pathPatternRule)
+                    .httpHeaderRule(headerRule)
                     .build();
         }
     }

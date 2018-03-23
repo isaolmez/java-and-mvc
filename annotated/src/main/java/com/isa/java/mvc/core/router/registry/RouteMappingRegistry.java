@@ -16,19 +16,19 @@ public class RouteMappingRegistry {
     public MappingRegistration getMappingRegistration(HttpServletRequest request) {
         for (RouteMappingInfo routeMappingInfo : mappingRegistry.keySet()) {
             boolean matches = true;
-            if (!routeMappingInfo.getHttpMethodRule().test(request)) {
+            if (routeMappingInfo.getHttpMethodRule() != null && !routeMappingInfo.getHttpMethodRule().test(request)) {
                 matches = false;
             }
 
-            if (!routeMappingInfo.getHttpMethodRule().test(request)) {
+            if (routeMappingInfo.getHttpHeaderRule() != null && !routeMappingInfo.getHttpHeaderRule().test(request)) {
                 matches = false;
             }
 
-            if (!routeMappingInfo.getPathPatternRule().test(request)) {
+            if (routeMappingInfo.getPathPatternRule() != null && !routeMappingInfo.getPathPatternRule().test(request)) {
                 matches = false;
             }
 
-            if (routeMappingInfo.getPathRule().test(request)) {
+            if (routeMappingInfo.getPathRule() != null && !routeMappingInfo.getPathRule().test(request)) {
                 matches = false;
             }
 

@@ -20,9 +20,9 @@ public class HandlerMethod {
 
     private Method method;
 
-    public Object invoke() throws MvcException {
+    public Object invoke() {
         try {
-            return method.invoke(handler);
+            return method.invoke(handler.getHandler());
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new MvcException(e);
         }
